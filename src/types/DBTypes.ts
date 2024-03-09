@@ -26,6 +26,8 @@ type UserOutput = Omit<User, 'password' | 'role'>;
 
 type UserInput = Omit<User, 'id' | 'role'>;
 
+type UserModify = Partial<Omit<User, 'id' | 'role'>>;
+
 type UserTest = Partial<User>;
 
 type LoginUser = Omit<User, 'password'>;
@@ -37,4 +39,4 @@ type TokenContent = {
   user: LoginUser;
 };
 
-export {User, Post, Comment, UserOutput, UserInput, UserTest, LoginUser, Credentials, TokenContent};
+export {User, Post, Comment, UserOutput, UserInput, UserModify, UserTest, LoginUser, Credentials, TokenContent};

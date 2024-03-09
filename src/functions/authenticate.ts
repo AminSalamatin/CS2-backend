@@ -7,7 +7,9 @@ export default async (req: Request): Promise<MyContext> => {
   const authHeader = req.headers.authorization;
   if (authHeader) {
     try {
-      const token = authHeader.split(' ')[1];
+      const token = authHeader.startsWith('Bearer ')
+        ? authHeader.split(' ')[1]
+        : authHeader;
       const userFromToken = jwt.verify(
         token,
         process.env.JWT_SECRET as string,

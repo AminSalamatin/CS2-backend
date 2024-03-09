@@ -41,6 +41,6 @@ type Query {
 type Mutation {
   login(credentials: Credentials!): LoginResponse
   register(user: UserInput!): UserResponse
-  updateUser(user: UserModify!): UserResponse
-  deleteUser: UserResponse
+  updateUser(user: UserModify!, id: ID): UserResponse
+  deleteUser(id: ID): UserResponse
 }

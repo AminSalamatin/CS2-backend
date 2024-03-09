@@ -6,6 +6,7 @@ import {
   UserOutput,
   LoginUser,
   Credentials,
+  UserModify,
 } from '../../types/DBTypes';
 import {LoginResponse, UserResponse} from '../../types/MessageTypes';
 import userModel from '../models/userModel';
@@ -72,7 +73,7 @@ export default {
       }
 
       if (!bcrypt.compareSync(password, user.password)) {
-        throw new CustomError('Invalid password ' + password + ' | ' + user.password, 403);
+        throw new CustomError('Invalid password ', 403);
       }
 
       const tokenContent: LoginUser = {
@@ -81,8 +82,11 @@ export default {
         id: user._id,
         role: user.role,
       };
+      console.log(tokenContent);
 
-      const token = jwt.sign(tokenContent, process.env.JWT_SECRET as string);
+      const token = jwt.sign(tokenContent, process.env.JWT_SECRET as string, {
+        expiresIn: '1h',
+      });
       const response: LoginResponse = {
         token,
         message: 'Login successful',
@@ -117,6 +121,77 @@ export default {
           username: user.username,
           email: user.email,
           id: user._id,
+        },
+      };
+      return response;
+    },
+    updateUser: async (
+      _parent: {},
+      args: {user: UserModify; id?: string},
+      context: MyContext,
+    ): Promise<UserResponse> => {
+      const user = context.userdata?.user;
+
+      if (!user) {
+        throw new CustomError('User not logged in', 403);
+      }
+
+      let userId = user.id;
+
+      if (args.id && user.role === 'admin') {
+        userId = args.id;
+      } else {
+        throw new CustomError('Unauthorized', 403);
+      }
+      
+      const updatedUser = await userModel.findByIdAndUpdate(userId, args.user, {
+        new: true,
+      });
+
+      if (!updatedUser) {
+        throw new CustomError('User not found', 403);
+      }
+
+      const response: UserResponse = {
+        message: 'User updated successfully',
+        user: {
+          username: updatedUser.username,
+          email: updatedUser.email,
+          id: updatedUser._id,
+        },
+      };
+      return response;
+    },
+    deleteUser: async (
+      _parent: {},
+      args: {id?: string},
+      context: MyContext,
+    ): Promise<UserResponse> => {
+      const user = context.userdata?.user;
+
+      if (!user) {
+        throw new CustomError('User not logged in', 403);
+      }
+
+      let userId = user.id;
+
+      if (args.id && user.role === 'admin') {
+        userId = args.id;
+      } else {
+        throw new CustomError('Unauthorized', 403);
+      }
+
+      const deletedUser = await userModel.findByIdAndDelete(userId);
+
+      if (!deletedUser) {
+        throw new Error('User not found');
+      }
+      const response: UserResponse = {
+        message: 'User deleted successfully',
+        user: {
+          username: deletedUser.username,
+          email: deletedUser.email,
+          id: deletedUser._id,
         },
       };
       return response;
