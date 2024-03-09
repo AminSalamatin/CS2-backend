@@ -72,7 +72,7 @@ export default {
       }
 
       if (!bcrypt.compareSync(password, user.password)) {
-        throw new CustomError('Invalid password', 403);
+        throw new CustomError('Invalid password ' + password + ' | ' + user.password, 403);
       }
 
       const tokenContent: LoginUser = {
@@ -104,7 +104,12 @@ export default {
       if (userFound) {
         throw new CustomError('User already registered on that email', 403);
       }
-      const user = new userModel(args);
+      const salt = 10;
+      const userData = {
+        ...args.user,
+        password: bcrypt.hashSync(args.user.password, salt),
+      };
+      const user = new userModel(userData);
       await user.save();
       const response: UserResponse = {
         message: 'User created successfully',
