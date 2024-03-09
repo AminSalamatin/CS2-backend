@@ -5,6 +5,7 @@ import {
   UserInput,
   UserOutput,
   LoginUser,
+  Credentials,
 } from '../../types/DBTypes';
 import {LoginResponse, UserResponse} from '../../types/MessageTypes';
 import userModel from '../models/userModel';
@@ -56,15 +57,14 @@ export default {
     login: async (
       _parent: {},
       args: {
-        username: string;
-        password: string;
+        credentials: Credentials;
       },
     ): Promise<LoginResponse> => {
-      const {username, password} = args;
+      const {username, password} = args.credentials;
 
       console.log('user, password', username, password);
       const user = await userModel.findOne({
-        $or: [{email: username}, {user_name: username}],
+        $or: [{email: username}, {username: username}],
       });
 
       if (!user) {
@@ -83,7 +83,7 @@ export default {
       };
 
       const token = jwt.sign(tokenContent, process.env.JWT_SECRET as string);
-      const message: LoginResponse = {
+      const response: LoginResponse = {
         token,
         message: 'Login successful',
         user: {
@@ -92,7 +92,29 @@ export default {
           id: user._id,
         },
       };
-      return message;
+      return response;
+    },
+    register: async (
+      _parent: {},
+      args: {
+        user: UserInput;
+      },
+    ): Promise<UserResponse> => {
+      const userFound = await userModel.findOne({email: args.user.email});
+      if (userFound) {
+        throw new CustomError('User already registered on that email', 403);
+      }
+      const user = new userModel(args);
+      await user.save();
+      const response: UserResponse = {
+        message: 'User created successfully',
+        user: {
+          username: user.username,
+          email: user.email,
+          id: user._id,
+        },
+      };
+      return response;
     },
   },
 };

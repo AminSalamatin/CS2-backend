@@ -43,12 +43,4 @@ type Mutation {
   register(user: UserInput!): UserResponse
   updateUser(user: UserModify!): UserResponse
   deleteUser: UserResponse
-  """
-  Separate mutations for admin because of rest api
-  """
-  updateUserAsAdmin(user: UserModify!, id: ID!): UserResponse
-  """
-  Separate mutations for admin because of rest api
-  """
-  deleteUserAsAdmin(id: ID!): UserResponse
 }
