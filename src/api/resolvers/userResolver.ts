@@ -143,7 +143,6 @@ export default {
       } else {
         throw new CustomError('Unauthorized', 403);
       }
-      
       const updatedUser = await userModel.findByIdAndUpdate(userId, args.user, {
         new: true,
       });

@@ -1,15 +1,14 @@
 import mongoose from 'mongoose';
 import {Comment} from '../../types/DBTypes';
 
-const commentSchema = new mongoose.Schema({
+const commentModel = new mongoose.Schema({
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
-  post: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Post',
+  postId: {
+    type: String,
     required: true,
   },
   content: {
@@ -22,4 +21,12 @@ const commentSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model<Comment>('Comment', commentSchema);
+commentModel.virtual('id').get(function () {
+  return this._id.toHexString();
+});
+
+commentModel.set('toJSON', {
+  virtuals: true,
+});
+
+export default mongoose.model<Comment>('Comment', commentModel);

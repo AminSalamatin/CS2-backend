@@ -9,18 +9,47 @@ type User = Partial<Document> & {
 };
 
 type Post = Partial<Document> & {
+  id: string;
   author: Types.ObjectId | User;
   title: string;
   content: string;
   createdAt: Date;
+  comments: Comment[];
 };
 
 type Comment = Partial<Document> & {
+  id: string;
   author: Types.ObjectId | User;
-  post: Types.ObjectId;
+  postId: string;
   content: string;
   createdAt: Date;
 };
+
+type PostPage = {
+  posts: Post[];
+  numberOfPages: number;
+};
+
+type Filter = {
+  title?: string;
+  authorName?: string;
+  startDate?: string;
+  endDate?: string;
+  sortOrder?: SortOrder;
+  page?: number;
+  limit?: number;
+};
+
+type FilterQuery = {
+  title?: {$regex: string; $options: 'i'};
+  authorName?: {$in: string[]; $options: 'i'};
+  createdAt?: {$gte?: Date; $lte?: Date};
+};
+
+enum SortOrder {
+  ASC = 1,
+  DESC = -1,
+}
 
 type UserOutput = Omit<User, 'password' | 'role'>;
 
@@ -39,4 +68,24 @@ type TokenContent = {
   user: LoginUser;
 };
 
-export {User, Post, Comment, UserOutput, UserInput, UserModify, UserTest, LoginUser, Credentials, TokenContent};
+type WritePost = Pick<Post, 'title' | 'content'>;
+
+type WriteComment = Pick<Comment, 'content' | 'postId'>;
+
+export {
+  User,
+  Post,
+  PostPage,
+  WritePost,
+  Comment,
+  WriteComment,
+  Filter,
+  FilterQuery,
+  UserOutput,
+  UserInput,
+  UserModify,
+  UserTest,
+  LoginUser,
+  Credentials,
+  TokenContent,
+};

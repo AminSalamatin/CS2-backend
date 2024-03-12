@@ -1,0 +1,64 @@
+type User {
+  id: ID!
+  username: String!
+  email: String!
+}
+
+type Post {
+  id: ID!
+  title: String!
+  content: String!
+  author: User!
+  createdAt: String!
+  comments: [Comment]
+}
+
+type PostPage {
+  posts: [Post]
+  numberOfPages: Int!
+}
+
+type Comment {
+  id: ID!
+  author: User!
+  postId: ID!
+  content: String!
+  createdAt: String!
+}
+
+input writePost {
+    title: String!
+    content: String!
+}
+
+input writeComment {
+    content: String!
+    postId: ID!
+}
+
+input Filter {
+  title: String
+  authorName: String
+  startDate: String
+  endDate: String
+  sortOrder: SortOrder
+  page: Int
+  limit: Int
+}
+
+enum SortOrder {
+  ASC
+  DESC
+}
+
+type Query {
+  getPosts(filter: Filter): PostPage
+  postById(id: ID!): Post
+}
+
+type Mutation {
+  createPost(postContent: writePost!): Post
+  createComment(commentContent: writeComment!): Comment
+  deletePost(id: ID!): Post
+  deleteComment(id: ID!): Comment
+}

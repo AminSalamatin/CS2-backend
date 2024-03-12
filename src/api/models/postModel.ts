@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import {Post} from '../../types/DBTypes';
 
-const postSchema = new mongoose.Schema({
+const postModel = new mongoose.Schema({
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -21,4 +21,12 @@ const postSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model<Post>('Post', postSchema);
+postModel.virtual('id').get(function () {
+  return this._id.toHexString();
+});
+
+postModel.set('toJSON', {
+  virtuals: true,
+});
+
+export default mongoose.model<Post>('Post', postModel);
