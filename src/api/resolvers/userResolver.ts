@@ -1,9 +1,7 @@
 import {GraphQLError} from 'graphql';
 import {
-  TokenContent,
   User,
   UserInput,
-  UserOutput,
   LoginUser,
   Credentials,
   UserModify,
