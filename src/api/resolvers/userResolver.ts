@@ -176,7 +176,7 @@ export default {
 
       if (args.id && user.role === 'admin') {
         userId = args.id;
-      } else {
+      } else if (args.id && user.role !== 'admin') {
         throw new CustomError('Unauthorized', 403);
       }
 
