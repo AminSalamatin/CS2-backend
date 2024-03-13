@@ -15,6 +15,7 @@ import commentModel from '../models/commentModel';
 import userModel from '../models/userModel';
 import CustomError from '../../classes/CustomError';
 import {MyContext} from '../../types/MyContext';
+import {PostResponse, CommentResponse} from '../../types/MessageTypes';
 
 export default {
   Query: {
@@ -37,25 +38,24 @@ export default {
       } else if (filter?.endDate) {
         toFilter.createdAt = {$lte: new Date(filter.endDate)};
       }
+
+      if (filter?.authorName) {
+        const author = await userModel.findOne({
+          username: filter.authorName.toLowerCase(),
+        });
+        if (author) {
+          toFilter.author = author._id;
+        }
+      }
+
       const page = filter?.page ?? 1;
       const limit = filter?.limit ?? 15;
-      console.log(args);
-      let filteredPosts = await postModel
+      const filteredPosts = await postModel
         .find(toFilter)
         .populate('author')
         .sort({createdAt: filter?.sortOrder ?? 1})
         .skip((page - 1) * limit)
         .limit(limit);
-      if (filter?.authorName) {
-        const author: string = filter.authorName;
-        const filterByAuthorName = filteredPosts.filter(
-          (e) =>
-            (e.author as User).username.toLowerCase() === author.toLowerCase(),
-        );
-        filteredPosts = filterByAuthorName;
-      }
-
-      console.log(filteredPosts);
 
       const postsWithComments: Post[] = await Promise.all(
         filteredPosts.map(async (post) => {
@@ -79,10 +79,10 @@ export default {
           };
         }),
       );
-
+      const totalPosts = await postModel.find(toFilter).countDocuments();
       const response: PostPage = {
         posts: postsWithComments,
-        numberOfPages: Math.ceil(filteredPosts.length / page),
+        numberOfPages: Math.ceil(totalPosts / limit),
       };
 
       return response;
@@ -125,7 +125,7 @@ export default {
       _parent: {},
       args: {postContent: WritePost},
       context: MyContext,
-    ): Promise<Post> => {
+    ): Promise<PostResponse> => {
       const {title, content} = args.postContent;
       const author = context.userdata?.user.id;
       console.log(author);
@@ -142,13 +142,16 @@ export default {
       const savedPost = await newPost.save();
       await savedPost.populate('author');
 
-      const response: Post = {
-        id: savedPost._id,
-        author: savedPost.author,
-        title: savedPost.title,
-        content: savedPost.content,
-        createdAt: savedPost.createdAt,
-        comments: [],
+      const response: PostResponse = {
+        message: 'Post created',
+        response: {
+          id: savedPost._id,
+          author: savedPost.author,
+          title: savedPost.title,
+          content: savedPost.content,
+          createdAt: savedPost.createdAt,
+          comments: [],
+        },
       };
 
       return response;
@@ -157,7 +160,7 @@ export default {
       _parent: {},
       args: {commentContent: WriteComment},
       context: MyContext,
-    ): Promise<Comment> => {
+    ): Promise<CommentResponse> => {
       const {postId, content} = args.commentContent;
       const author = context.userdata?.user.id;
       if (!author) {
@@ -171,43 +174,124 @@ export default {
       const savedComment = await newComment.save();
       await savedComment.populate('author');
 
-      const response: Comment = {
-        id: savedComment._id,
-        author: savedComment.author,
-        postId: savedComment.postId,
-        content: savedComment.content,
-        createdAt: savedComment.createdAt,
+      const response: CommentResponse = {
+        message: 'Comment created',
+        response: {
+          id: savedComment._id,
+          author: savedComment.author,
+          postId: savedComment.postId,
+          content: savedComment.content,
+          createdAt: savedComment.createdAt,
+        },
       };
-      console.log(savedComment, response);
+
       return response;
     },
     deletePost: async (
       _parent: {},
       args: {id: string},
       context: MyContext,
-    ): Promise<Post> => {
+    ): Promise<PostResponse> => {
       const {id} = args;
       const author = context.userdata?.user;
+      const postToDelete = await postModel.findById(id).populate('author');
       if (!author) {
         throw new CustomError('User not authorized', 403);
-      } //else if (author !== )
-      const deletedPost = await postModel.findByIdAndDelete(id);
-      if (!deletedPost) {
-        throw new CustomError('Post not found', 403);
+      } else if (!postToDelete) {
+        throw new CustomError('Post not found', 404);
+      } else if (
+        author.id.toString() !== postToDelete.author.id.toString() ||
+        (author.role !== 'admin' &&
+          author.id.toString() !== postToDelete.author.id.toString())
+      ) {
+        console.log(author.id, postToDelete.author.id);
+        throw new CustomError('User is not permitted to delete this post', 403);
       }
-      return deletedPost;
+
+      const comments: Comment[] = await commentModel
+        .find({postId: id})
+        .sort({createdAt: 1})
+        .populate('author');
+      await commentModel.deleteMany({postId: id});
+
+      const deletedPost = await postModel
+        .findByIdAndDelete(id)
+        .populate('author');
+      if (!deletedPost) {
+        throw new CustomError('Post not found or already deleted', 404);
+      }
+
+      const response: PostResponse = {
+        message: 'Post deleted(with comments)',
+        response: {
+          id: id,
+          author: {
+            id: deletedPost.author.id,
+            username: (deletedPost.author as User).username,
+            email: (deletedPost.author as User).email,
+            role: (deletedPost.author as User).role,
+            password: (deletedPost.author as User).password,
+          },
+          title: deletedPost.title,
+          content: deletedPost.content,
+          createdAt: deletedPost.createdAt,
+          comments: comments.map((comment) => ({
+            id: comment._id,
+            author: comment.author,
+            postId: comment.postId,
+            content: comment.content,
+            createdAt: comment.createdAt,
+          })),
+        },
+      };
+      console.log(response);
+      return response;
     },
     deleteComment: async (
       _parent: {},
-      _args: {id: string},
-      _context: {},
-    ): Promise<Comment> => {
-      const {id} = _args;
-      const deletedComment = await commentModel.findByIdAndDelete(id);
-      if (!deletedComment) {
-        throw new Error('Comment not found');
+      args: {id: string},
+      context: MyContext,
+    ): Promise<CommentResponse> => {
+      const {id} = args;
+      const author = context.userdata?.user;
+      const commentToDelete = await commentModel
+        .findById(id)
+        .populate('author');
+      if (!author) {
+        throw new CustomError('User not authorized', 403);
+      } else if (!commentToDelete) {
+        throw new CustomError('Comment not found', 404);
+      } else if (
+        author.id.toString() !== commentToDelete.author.id.toString() ||
+        (author.role !== 'admin' &&
+          author.id.toString() !== commentToDelete.author.id.toString())
+      ) {
+        console.log(author.id, commentToDelete.author.id);
+        throw new CustomError(
+          'User is not permitted to delete this comment',
+          403,
+        );
       }
-      return deletedComment;
+
+      const deletedComment = await commentModel
+        .findByIdAndDelete(id)
+        .populate('author');
+      if (!deletedComment) {
+        throw new CustomError('Comment not found or already deleted', 404);
+      }
+
+      const response: CommentResponse = {
+        message: 'Comment deleted',
+        response: {
+          id: deletedComment._id,
+          author: deletedComment.author,
+          postId: deletedComment.postId,
+          content: deletedComment.content,
+          createdAt: deletedComment.createdAt,
+        },
+      };
+      console.log(response);
+      return response;
     },
   },
 };

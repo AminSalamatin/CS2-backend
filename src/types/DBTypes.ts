@@ -42,7 +42,7 @@ type Filter = {
 
 type FilterQuery = {
   title?: {$regex: string; $options: 'i'};
-  authorName?: {$in: string[]; $options: 'i'};
+  author?: string;
   createdAt?: {$gte?: Date; $lte?: Date};
 };
 
