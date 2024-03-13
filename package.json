@@ -2,9 +2,9 @@
   "name": "sssf-graphql-starter",
   "version": "0.0.1",
   "description": "A basic starter for an express.js API with Typescript & GraphQL",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "node dist/src/index.js",
     "dev": "nodemon src/index.ts",
     "build": "tsc",
     "copyGraphql": "copyfiles --error src/api/schemas/*.graphql dist",
