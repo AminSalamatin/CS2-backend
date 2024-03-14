@@ -1,0 +1,195 @@
+type FullStream {
+  name: String!
+  category: String!
+  country: Country!
+  viewers: Int!
+  link: String!
+}
+
+type TeamRanking {
+  points: Int!
+  place: Int!
+  team: Team!
+  change: Int!
+  isNew: Boolean!
+}
+
+type FullTeam {
+  id: String!
+  name: String!
+  logo: String
+  facebook: String
+  twitter: String
+  instagram: String
+  country: Country!
+  rank: Int!
+  players: [Player]!
+  rankingDevelopment: [Int]!
+  news: [News]
+}
+
+type PlayerRanking {
+  player: Player!
+  teams: [Team]
+  maps: Int!
+  kdDiff: Int!
+  rounds: Int!
+  kd: Float!
+  rating1: Float!
+}
+
+type FullPlayer {
+  id: String!
+  name: String!
+  ign: String
+  image: String
+  age: Int
+  twitter: String
+  twitch: String
+  facebook: String
+  instagram: String
+  country: Country!
+  team: Team!
+  statistics: Statistics!
+  achievements: [Achievement]
+  news: [News]
+
+}
+
+type Achievement {
+  place: String!
+  event: Event!
+}
+
+type NewsPreview {
+  link: String!
+  title: String!
+  comments: Int!
+  date: Float!
+  country: Country!
+}
+
+type Event {
+    id: Int!
+    name: String!
+    startDate: Int
+    leaveDate: Int
+}
+
+type EventPreview {
+  id: ID!
+  name: String!
+  dateStart: String
+  dateEnd: String
+  location: Location
+  prizePool: String
+  numberOfTeams: Int
+  featured: Boolean!
+}
+
+type FullEvent {
+  id: ID!
+  name: String!
+  logo: String
+  dateStart: String
+  dateEnd: String
+  location: Location
+  prizePool: String
+  numberOfTeams: Int
+  teams: [EventTeam]
+  prizeDistribution: [PrizeDistribution]
+  relatedEvents: [RelatedEvent]
+  formats: [EventFormat]
+  mapPool: [String]
+  news: [News]
+}
+
+type EventFormat {
+  type: String!
+  description: String
+}
+
+type RelatedEvent {
+  name: String!
+  id: Int!
+}
+
+type PrizeDistribution {
+  place: String!
+  prize: String
+  qualifiesFor: String
+  otherPrize: String
+  team: String
+}
+
+type EventTeam {
+  name: String!
+  id: Int!
+  reasonForParticipation: String
+  rankDuringEvent: Int!
+}
+
+type Location {
+  name: String!
+  code: String!
+}
+
+type News {
+  name: String!
+  link: String!
+}
+
+type Player {
+  name: String!
+  id: Int!
+}
+
+type PlayerStats {
+  kills: Int
+  headshots: Float
+  deaths: Int
+  kdRatio: Float
+  damagePerRound: Float
+  grenadeDamagePerRound: Float
+  mapsPlayed: Int
+  roundsPlayed: Int
+}
+
+type SocialNetworks {
+  twitter: String
+  twitch: String
+  facebook: String
+}
+
+type Team {
+  name: String!
+  id: Int!
+}
+
+type Country {
+  name: String!
+  code: String!
+}
+
+type Statistics {
+    rating: Float!
+    killsPerRound: Float!
+    headshots: Float!
+    mapsPlayed: Int!
+    deathsPerRound: Float!
+    roundsContributed: Float!
+}
+
+type Query {
+  getStreams: [FullStream]
+  getTeamRanking: [TeamRanking]
+  getTeam(id: ID!): FullTeam
+  getPlayerRanking: [PlayerRanking]
+  getPlayer(id: ID!): FullPlayer
+  getEvents: [EventPreview]
+  getEvent(id: ID!): FullEvent
+  getNews: [NewsPreview]
+  getEventByName(name: String!): FullEvent
+  getTeamByName(name: String!): FullTeam
+  getPlayerByName(name: String!): FullPlayer
+}

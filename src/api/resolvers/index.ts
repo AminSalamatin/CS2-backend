@@ -1,5 +1,6 @@
 //import HLTVResolver from './HLTVResolver';
+import HLTVResolver from './HLTVResolver';
 import forumResolver from './forumResolver';
-import userReslover from './userResolver';
+import userResolver from './userResolver';
 
-export default [userReslover, forumResolver];
+export default [userResolver, forumResolver, HLTVResolver];
