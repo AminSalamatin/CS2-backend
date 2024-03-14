@@ -1,4 +1,3 @@
-import {GraphQLError} from 'graphql';
 import {
   Filter,
   FilterQuery,
@@ -93,7 +92,7 @@ export default {
     ): Promise<Post> => {
       const post = await postModel.findById(args.id).populate('author');
       if (!post) {
-        throw new CustomError('Post not found', 403);
+        throw new CustomError('Post not found', 404);
       }
       const comments: Comment[] = await commentModel
         .find({postId: args.id})
@@ -196,7 +195,7 @@ export default {
       const author = context.userdata?.user;
       const postToDelete = await postModel.findById(id).populate('author');
       if (!author) {
-        throw new CustomError('User not authorized', 403);
+        throw new CustomError('User not authorized', 401);
       } else if (!postToDelete) {
         throw new CustomError('Post not found', 404);
       } else if (
@@ -258,7 +257,7 @@ export default {
         .findById(id)
         .populate('author');
       if (!author) {
-        throw new CustomError('User not authorized', 403);
+        throw new CustomError('User not authorized', 401);
       } else if (!commentToDelete) {
         throw new CustomError('Comment not found', 404);
       } else if (

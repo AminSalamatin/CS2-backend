@@ -1,4 +1,3 @@
-import {GraphQLError} from 'graphql';
 import {
   User,
   UserInput,
@@ -36,11 +35,11 @@ export default {
       const token = context.userdata?.token;
       const user = context.userdata?.user;
       if (!user) {
-        throw new CustomError('No user login', 403);
+        throw new CustomError('No user login', 401);
       }
 
       if (!token) {
-        throw new CustomError('No token', 403);
+        throw new CustomError('No token', 400);
       } else if (jwt.verify(token, process.env.JWT_SECRET as string)) {
         const message: UserResponse = {
           message: 'Token verified',
@@ -48,7 +47,7 @@ export default {
         };
         return message;
       } else {
-        throw new CustomError('Wrong token', 403);
+        throw new CustomError('Wrong token', 400);
       }
     },
   },
@@ -67,7 +66,7 @@ export default {
       });
 
       if (!user) {
-        throw new CustomError('Invalid username/email', 403);
+        throw new CustomError('Invalid username/email', 404);
       }
 
       if (!bcrypt.compareSync(password, user.password)) {
@@ -104,7 +103,7 @@ export default {
     ): Promise<UserResponse> => {
       const userFound = await userModel.findOne({email: args.user.email});
       if (userFound) {
-        throw new CustomError('User already registered on that email', 403);
+        throw new CustomError('User already registered on that email', 400);
       }
       const salt = 10;
       const userData = {
@@ -131,7 +130,7 @@ export default {
       const user = context.userdata?.user;
 
       if (!user) {
-        throw new CustomError('User not logged in', 403);
+        throw new CustomError('User not logged in', 401);
       }
 
       let userId = user.id;
@@ -146,7 +145,7 @@ export default {
       });
 
       if (!updatedUser) {
-        throw new CustomError('User not found', 403);
+        throw new CustomError('User not found', 404);
       }
 
       const response: UserResponse = {
@@ -181,7 +180,7 @@ export default {
       const deletedUser = await userModel.findByIdAndDelete(userId);
 
       if (!deletedUser) {
-        throw new Error('User not found');
+        throw new CustomError('User not found', 404);
       }
       const response: UserResponse = {
         message: 'User deleted successfully',
