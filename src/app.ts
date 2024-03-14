@@ -19,7 +19,7 @@ import {MyContext} from './types/MyContext';
 //import {GraphQLError} from 'graphql';
 
 import {createRateLimitRule} from 'graphql-rate-limit';
-import {shield} from 'graphql-shield';
+import {shield, and, rule} from 'graphql-shield';
 
 const app = express();
 
@@ -36,42 +36,44 @@ app.use(
       identifyContext: (ctx) => ctx.id,
     });
 
+    const isPublic = rule()(() => true);
+
     const permissions = shield({
       Query: {
-        //HLTV
-        getStreams: rateLimitRule({max: 5, window: '1m'}),
-        getTeamRanking: rateLimitRule({max: 3, window: '1m'}),
-        getTeam: rateLimitRule({max: 10, window: '1m'}),
-        getPlayerRanking: rateLimitRule({max: 3, window: '1m'}),
-        getPlayer: rateLimitRule({max: 10, window: '1m'}),
-        getEvents: rateLimitRule({max: 5, window: '1m'}),
-        getEvent: rateLimitRule({max: 10, window: '1m'}),
-        getNews: rateLimitRule({max: 5, window: '1m'}),
-        getEventByName: rateLimitRule({max: 10, window: '1m'}),
-        getTeamByName: rateLimitRule({max: 10, window: '1m'}),
-        getPlayerByName: rateLimitRule({max: 10, window: '1m'}),
+        // HLTV
+        getStreams: and(rateLimitRule({max: 5, window: '1m'}), isPublic),
+        getTeamRanking: and(rateLimitRule({max: 3, window: '1m'}), isPublic),
+        getTeam: and(rateLimitRule({max: 10, window: '1m'}), isPublic),
+        getPlayerRanking: and(rateLimitRule({max: 3, window: '1m'}), isPublic),
+        getPlayer: and(rateLimitRule({max: 10, window: '1m'}), isPublic),
+        getEvents: and(rateLimitRule({max: 5, window: '1m'}), isPublic),
+        getEvent: and(rateLimitRule({max: 10, window: '1m'}), isPublic),
+        getNews: and(rateLimitRule({max: 5, window: '1m'}), isPublic),
+        getEventByName: and(rateLimitRule({max: 10, window: '1m'}), isPublic),
+        getTeamByName: and(rateLimitRule({max: 10, window: '1m'}), isPublic),
+        getPlayerByName: and(rateLimitRule({max: 10, window: '1m'}), isPublic),
 
-        //Forum
-        getPosts: rateLimitRule({max: 5, window: '1m'}),
-        postById: rateLimitRule({max: 10, window: '1m'}),
+        // Forum
+        getPosts: and(rateLimitRule({max: 5, window: '1m'}), isPublic),
+        postById: and(rateLimitRule({max: 10, window: '1m'}), isPublic),
 
-        //User
-        users: rateLimitRule({max: 5, window: '1m'}),
-        userById: rateLimitRule({max: 10, window: '1m'}),
-        checkToken: rateLimitRule({max: 1, window: '1s'}),
+        // User
+        users: and(rateLimitRule({max: 5, window: '1m'}), isPublic),
+        userById: and(rateLimitRule({max: 10, window: '1m'}), isPublic),
+        checkToken: and(rateLimitRule({max: 1, window: '1s'}), isPublic),
       },
       Mutation: {
-        //Forum
-        createPost: rateLimitRule({max: 2, window: '1m'}),
-        createComment: rateLimitRule({max: 3, window: '1m'}),
-        deletePost: rateLimitRule({max: 2, window: '1m'}),
-        deleteComment: rateLimitRule({max: 3, window: '1m'}),
+        // Forum
+        createPost: and(rateLimitRule({max: 2, window: '1m'}), isPublic),
+        createComment: and(rateLimitRule({max: 3, window: '1m'}), isPublic),
+        deletePost: and(rateLimitRule({max: 2, window: '1m'}), isPublic),
+        deleteComment: and(rateLimitRule({max: 3, window: '1m'}), isPublic),
 
-        //User
-        login: rateLimitRule({max: 5, window: '1m'}),
-        register: rateLimitRule({max: 5, window: '1m'}),
-        updateUser: rateLimitRule({max: 5, window: '1m'}),
-        deleteUser: rateLimitRule({max: 5, window: '1m'}),
+        // User
+        login: and(rateLimitRule({max: 5, window: '1m'}), isPublic),
+        register: and(rateLimitRule({max: 5, window: '1m'}), isPublic),
+        updateUser: and(rateLimitRule({max: 5, window: '1m'}), isPublic),
+        deleteUser: and(rateLimitRule({max: 5, window: '1m'}), isPublic),
       },
     });
 

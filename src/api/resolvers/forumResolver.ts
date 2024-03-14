@@ -7,6 +7,7 @@ import {
   WriteComment,
   User,
   PostPage,
+  SortOrder,
 } from '../../types/DBTypes';
 import mongoose from 'mongoose';
 import postModel from '../models/postModel';
@@ -46,13 +47,13 @@ export default {
           toFilter.author = author._id;
         }
       }
-
+      const sortOrder = filter?.sortOrder ?? 'ASC';
       const page = filter?.page ?? 1;
       const limit = filter?.limit ?? 15;
       const filteredPosts = await postModel
         .find(toFilter)
         .populate('author')
-        .sort({createdAt: filter?.sortOrder ?? 1})
+        .sort({createdAt: SortOrder[sortOrder as keyof typeof SortOrder] ?? 1})
         .skip((page - 1) * limit)
         .limit(limit);
 

@@ -88,4 +88,5 @@ export {
   LoginUser,
   Credentials,
   TokenContent,
+  SortOrder,
 };
