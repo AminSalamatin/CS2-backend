@@ -58,7 +58,7 @@ app.use(
         //User
         users: rateLimitRule({max: 5, window: '1m'}),
         userById: rateLimitRule({max: 10, window: '1m'}),
-        checkToken: rateLimitRule({max: 10, window: '1m'}),
+        checkToken: rateLimitRule({max: 1, window: '1s'}),
       },
       Mutation: {
         //Forum
