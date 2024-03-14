@@ -18,8 +18,8 @@ import {applyMiddleware} from 'graphql-middleware';
 import {MyContext} from './types/MyContext';
 //import {GraphQLError} from 'graphql';
 
-import {createRateLimitRule} from 'graphql-rate-limit';
-import {shield, and, rule} from 'graphql-shield';
+//import {createRateLimitRule} from 'graphql-rate-limit';
+//import {shield, and, rule} from 'graphql-shield';
 
 const app = express();
 
@@ -32,57 +32,14 @@ app.use(
 
 (async () => {
   try {
-    const rateLimitRule = createRateLimitRule({
-      identifyContext: (ctx) => ctx.id,
-    });
 
-    const isPublic = rule()(() => true);
-
-    const permissions = shield({
-      Query: {
-        // HLTV
-        getStreams: and(rateLimitRule({max: 5, window: '1m'}), isPublic),
-        getTeamRanking: and(rateLimitRule({max: 3, window: '1m'}), isPublic),
-        getTeam: and(rateLimitRule({max: 10, window: '1m'}), isPublic),
-        getPlayerRanking: and(rateLimitRule({max: 3, window: '1m'}), isPublic),
-        getPlayer: and(rateLimitRule({max: 10, window: '1m'}), isPublic),
-        getEvents: and(rateLimitRule({max: 5, window: '1m'}), isPublic),
-        getEvent: and(rateLimitRule({max: 10, window: '1m'}), isPublic),
-        getNews: and(rateLimitRule({max: 5, window: '1m'}), isPublic),
-        getEventByName: and(rateLimitRule({max: 10, window: '1m'}), isPublic),
-        getTeamByName: and(rateLimitRule({max: 10, window: '1m'}), isPublic),
-        getPlayerByName: and(rateLimitRule({max: 10, window: '1m'}), isPublic),
-
-        // Forum
-        getPosts: and(rateLimitRule({max: 5, window: '1m'}), isPublic),
-        postById: and(rateLimitRule({max: 10, window: '1m'}), isPublic),
-
-        // User
-        users: and(rateLimitRule({max: 5, window: '1m'}), isPublic),
-        userById: and(rateLimitRule({max: 10, window: '1m'}), isPublic),
-        checkToken: and(rateLimitRule({max: 1, window: '1s'}), isPublic),
-      },
-      Mutation: {
-        // Forum
-        createPost: and(rateLimitRule({max: 2, window: '1m'}), isPublic),
-        createComment: and(rateLimitRule({max: 3, window: '1m'}), isPublic),
-        deletePost: and(rateLimitRule({max: 2, window: '1m'}), isPublic),
-        deleteComment: and(rateLimitRule({max: 3, window: '1m'}), isPublic),
-
-        // User
-        login: and(rateLimitRule({max: 5, window: '1m'}), isPublic),
-        register: and(rateLimitRule({max: 5, window: '1m'}), isPublic),
-        updateUser: and(rateLimitRule({max: 5, window: '1m'}), isPublic),
-        deleteUser: and(rateLimitRule({max: 5, window: '1m'}), isPublic),
-      },
-    });
 
     const schema = applyMiddleware(
       makeExecutableSchema({
         typeDefs,
         resolvers,
       }),
-      permissions,
+      //permissions,
     );
 
     const server = new ApolloServer<MyContext>({
