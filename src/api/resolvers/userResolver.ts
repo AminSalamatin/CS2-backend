@@ -128,18 +128,23 @@ export default {
       context: MyContext,
     ): Promise<UserResponse> => {
       const user = context.userdata?.user;
+      console.log(user);
 
       if (!user) {
         throw new CustomError('User not logged in', 401);
       }
+      console.log(args);
 
       let userId = user.id;
 
-      if (args.id && user.role === 'admin') {
-        userId = args.id;
-      } else {
-        throw new CustomError('Unauthorized', 403);
+      if (args?.id) {
+        if (user.role === 'admin') {
+          userId = args.id;
+        } else {
+          throw new CustomError('Unauthorized', 403);
+        }
       }
+      console.log('updated user id', userId);
       const updatedUser = await userModel.findByIdAndUpdate(userId, args.user, {
         new: true,
       });
