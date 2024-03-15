@@ -1,4 +1,32 @@
-## README
+# CS2 Backend
+
+This repository contains the backend code for the CS2 project, a platform for Counter-Strike 2 gaming community.
+
+## Getting Started
+
+To clone the repository, run the following command:
+
+git clone https://github.com/AminSalamatin/CS2-backend.git
+
+## NPM Commands
+
 - `npm i` to install dependencies
 - `npm run dev` to start development server
-- `npm run test` to run tests
+
+## Environmental Variable
+
+- `NODE_ENV` = Node Environment
+- `PORT` = Localhost Port
+- `JWT_SECRET` = JSON Web Token Secret
+- `DATABASE_URL` = MongoDB Database URL
+
+## Built With
+
+- [Node.js](https://nodejs.org/) - The runtime environment
+- [Express](https://expressjs.com/) - The web framework
+- [Apollo Server](https://www.apollographql.com/docs/apollo-server/) - The GraphQL server
+- [MongoDB](https://www.mongodb.com/) - The database
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/AminSalamatin/CS2-backend/LICENSE.md) file for details.
