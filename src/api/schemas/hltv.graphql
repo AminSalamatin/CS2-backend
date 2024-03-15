@@ -53,7 +53,6 @@ type FullPlayer {
   statistics: Statistics!
   achievements: [Achievement]
   news: [News]
-
 }
 
 type Achievement {
@@ -70,10 +69,10 @@ type NewsPreview {
 }
 
 type Event {
-    id: Int!
-    name: String!
-    startDate: Int
-    leaveDate: Int
+  id: Int!
+  name: String!
+  startDate: Int
+  leaveDate: Int
 }
 
 type EventPreview {
@@ -119,7 +118,7 @@ type PrizeDistribution {
   prize: String
   qualifiesFor: String
   otherPrize: String
-  team: String
+  team: Team!
 }
 
 type EventTeam {
@@ -172,12 +171,12 @@ type Country {
 }
 
 type Statistics {
-    rating: Float!
-    killsPerRound: Float!
-    headshots: Float!
-    mapsPlayed: Int!
-    deathsPerRound: Float!
-    roundsContributed: Float!
+  rating: Float!
+  killsPerRound: Float!
+  headshots: Float!
+  mapsPlayed: Int!
+  deathsPerRound: Float!
+  roundsContributed: Float!
 }
 
 type Query {
