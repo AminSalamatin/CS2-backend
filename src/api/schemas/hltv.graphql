@@ -126,7 +126,7 @@ type EventTeam {
   name: String!
   id: Int!
   reasonForParticipation: String
-  rankDuringEvent: Int!
+  rankDuringEvent: Int
 }
 
 type Location {

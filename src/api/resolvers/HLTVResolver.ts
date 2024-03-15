@@ -17,7 +17,7 @@ export default {
       return streams;
     },
     getTeamRanking: async (): Promise<TeamRanking[]> => {
-      const ranking = await HLTV.getTeamRanking({year: 2022});
+      const ranking = await HLTV.getTeamRanking();
       return ranking;
     },
     getTeam: async (_parent: {}, args: {id: number}): Promise<FullTeam> => {
@@ -36,10 +36,12 @@ export default {
     },
     getEvents: async (): Promise<EventPreview[]> => {
       const events = await HLTV.getEvents();
+      console.log(events);
       return events;
     },
     getEvent: async (_parent: {}, args: {id: number}): Promise<FullEvent> => {
       const event = await HLTV.getEvent(args);
+      console.log(event);
       return event;
     },
     getNews: async (): Promise<NewsPreview[]> => {
