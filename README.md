@@ -1,6 +1,8 @@
 # CS2 Backend
 
-This repository contains the backend code for the CS2 project, a platform for Counter-Strike 2 gaming community.
+This repository contains the backend code for the CS2 project, a platform for the Counter-Strike 2 gaming community. 
+
+The code utilizes the HLTV API for accessing game-related data, and it features a forum for community discussions as well as user authentication for secure access.
 
 ## Getting Started
 
