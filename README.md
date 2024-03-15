@@ -4,7 +4,7 @@ This repository contains the backend code for the CS2 project, a platform for th
 
 The code utilizes the HLTV API for accessing game-related data, and it features a forum for community discussions as well as user authentication for secure access.
 
-[ClosedAI-CS2-Tracker](https://github.com/Xarros0/ClosedAI-CS2-Tracker)
+[ClosedAI-CS2-Tracker](https://github.com/Xarros0/ClosedAI-CS2-Tracker) link to front-end repo
 
 ## Getting Started
 
