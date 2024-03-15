@@ -18,8 +18,8 @@ import {applyMiddleware} from 'graphql-middleware';
 import {MyContext} from './types/MyContext';
 //import {GraphQLError} from 'graphql';
 
-import {createRateLimitRule} from 'graphql-rate-limit';
-import {shield, and} from 'graphql-shield';
+//import {createRateLimitRule} from 'graphql-rate-limit';
+//import {shield, and} from 'graphql-shield';
 
 const app = express();
 
@@ -32,6 +32,7 @@ app.use(
 
 (async () => {
   try {
+    /*
     const rateLimitRule = createRateLimitRule({
       identifyContext: (ctx) => ctx.id,
     });
@@ -74,13 +75,14 @@ app.use(
         deleteUser: and(rateLimitRule({max: 5, window: '1m'})),
       },
     });
+    */
 
     const schema = applyMiddleware(
       makeExecutableSchema({
         typeDefs,
         resolvers,
       }),
-      permissions,
+      //permissions,
     );
 
     const server = new ApolloServer<MyContext>({
