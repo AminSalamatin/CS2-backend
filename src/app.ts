@@ -40,39 +40,39 @@ app.use(
     const permissions = shield({
       Query: {
         // HLTV
-        getStreams: and(rateLimitRule({max: 5, window: '1m'})),
-        getTeamRanking: and(rateLimitRule({max: 3, window: '1m'})),
+        getStreams: and(rateLimitRule({max: 10, window: '1m'})),
+        getTeamRanking: and(rateLimitRule({max: 10, window: '1m'})),
         getTeam: and(rateLimitRule({max: 10, window: '1m'})),
-        getPlayerRanking: and(rateLimitRule({max: 3, window: '1m'})),
+        getPlayerRanking: and(rateLimitRule({max: 10, window: '1m'})),
         getPlayer: and(rateLimitRule({max: 10, window: '1m'})),
-        getEvents: and(rateLimitRule({max: 5, window: '1m'})),
+        getEvents: and(rateLimitRule({max: 10, window: '1m'})),
         getEvent: and(rateLimitRule({max: 10, window: '1m'})),
-        getNews: and(rateLimitRule({max: 5, window: '1m'})),
+        getNews: and(rateLimitRule({max: 10, window: '1m'})),
         getEventByName: and(rateLimitRule({max: 10, window: '1m'})),
         getTeamByName: and(rateLimitRule({max: 10, window: '1m'})),
         getPlayerByName: and(rateLimitRule({max: 10, window: '1m'})),
 
         // Forum
-        getPosts: and(rateLimitRule({max: 5, window: '1m'})),
+        getPosts: and(rateLimitRule({max: 10, window: '1m'})),
         postById: and(rateLimitRule({max: 10, window: '1m'})),
 
         // User
-        users: and(rateLimitRule({max: 5, window: '1m'})),
+        users: and(rateLimitRule({max: 10, window: '1m'})),
         userById: and(rateLimitRule({max: 10, window: '1m'})),
         checkToken: and(rateLimitRule({max: 1, window: '1s'})),
       },
       Mutation: {
         // Forum
-        createPost: and(rateLimitRule({max: 2, window: '1m'})),
-        createComment: and(rateLimitRule({max: 3, window: '1m'})),
-        deletePost: and(rateLimitRule({max: 2, window: '1m'})),
-        deleteComment: and(rateLimitRule({max: 3, window: '1m'})),
+        createPost: and(rateLimitRule({max: 10, window: '1m'})),
+        createComment: and(rateLimitRule({max: 10, window: '1m'})),
+        deletePost: and(rateLimitRule({max: 10, window: '1m'})),
+        deleteComment: and(rateLimitRule({max: 10, window: '1m'})),
 
         // User
-        login: and(rateLimitRule({max: 5, window: '1m'})),
-        register: and(rateLimitRule({max: 5, window: '1m'})),
-        updateUser: and(rateLimitRule({max: 5, window: '1m'})),
-        deleteUser: and(rateLimitRule({max: 5, window: '1m'})),
+        login: and(rateLimitRule({max: 10, window: '1m'})),
+        register: and(rateLimitRule({max: 10, window: '1m'})),
+        updateUser: and(rateLimitRule({max: 10, window: '1m'})),
+        deleteUser: and(rateLimitRule({max: 10, window: '1m'})),
       },
     });
     */
