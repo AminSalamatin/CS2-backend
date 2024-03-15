@@ -26,7 +26,7 @@ export default {
     },
     getPlayerRanking: async (): Promise<PlayerRanking[]> => {
       const ranking = await HLTV.getPlayerRanking({
-        rankingFilter: RankingFilter.Top50,
+        rankingFilter: RankingFilter.Top20,
       });
       return ranking;
     },
