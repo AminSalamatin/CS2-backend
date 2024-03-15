@@ -16,7 +16,9 @@ import {MyContext} from '../../types/MyContext';
 export default {
   Query: {
     users: async (): Promise<User[]> => {
-      return await userModel.find();
+      const users = await userModel.find();
+      console.log(users);
+      return users;
     },
     userById: async (
       _parent: {},
@@ -108,7 +110,7 @@ export default {
       const salt = 10;
       const userData = {
         ...args.user,
-        password: bcrypt.hashSync(args.user.password, salt),
+        password: await bcrypt.hashSync(args.user.password, salt),
       };
       const user = new userModel(userData);
       await user.save();
@@ -144,8 +146,17 @@ export default {
           throw new CustomError('Unauthorized', 403);
         }
       }
-      console.log('updated user id', userId);
-      const updatedUser = await userModel.findByIdAndUpdate(userId, args.user, {
+
+      let userData = args.user;
+
+      if (userData?.password) {
+        const salt = 10;
+        userData = {
+          ...args.user,
+          password: await bcrypt.hashSync(args.user.password!, salt),
+        };
+      }
+      const updatedUser = await userModel.findByIdAndUpdate(userId, userData, {
         new: true,
       });
 
