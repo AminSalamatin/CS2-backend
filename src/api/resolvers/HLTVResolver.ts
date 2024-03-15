@@ -7,6 +7,7 @@ import HLTV, {
   FullEvent,
   NewsPreview,
   FullTeam,
+  RankingFilter,
 } from 'hltv';
 
 export default {
@@ -16,7 +17,7 @@ export default {
       return streams;
     },
     getTeamRanking: async (): Promise<TeamRanking[]> => {
-      const ranking = await HLTV.getTeamRanking();
+      const ranking = await HLTV.getTeamRanking({year: 2022});
       return ranking;
     },
     getTeam: async (_parent: {}, args: {id: number}): Promise<FullTeam> => {
@@ -24,7 +25,9 @@ export default {
       return team;
     },
     getPlayerRanking: async (): Promise<PlayerRanking[]> => {
-      const ranking = await HLTV.getPlayerRanking();
+      const ranking = await HLTV.getPlayerRanking({
+        rankingFilter: RankingFilter.Top50,
+      });
       return ranking;
     },
     getPlayer: async (_parent: {}, args: {id: number}): Promise<FullPlayer> => {
@@ -40,11 +43,14 @@ export default {
       return event;
     },
     getNews: async (): Promise<NewsPreview[]> => {
-      const news = await HLTV.getNews();
+      const news = await HLTV.getNews({
+        year: 2022,
+      });
       news.map((oneNews) => {
         oneNews.link = 'https://www.hltv.org/' + oneNews.link;
         return oneNews;
       });
+      console.log(news);
       return news;
     },
     getEventByName: async (
