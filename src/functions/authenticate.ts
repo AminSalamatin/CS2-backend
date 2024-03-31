@@ -5,6 +5,7 @@ import {MyContext} from '../types/MyContext';
 
 export default async (req: Request): Promise<MyContext> => {
   const authHeader = req.headers.authorization;
+  const returnContext: MyContext = {ip: req.ip};
   if (authHeader) {
     try {
       const token = authHeader.startsWith('Bearer ')
@@ -15,16 +16,17 @@ export default async (req: Request): Promise<MyContext> => {
         process.env.JWT_SECRET as string,
       ) as LoginUser;
       if (!userFromToken) {
-        return {};
+        return returnContext;
       }
       const tokenContent: TokenContent = {
         token: token,
         user: userFromToken,
       };
-      return {userdata: tokenContent};
+      returnContext.userdata = tokenContent;
+      return returnContext;
     } catch (error) {
-      return {};
+      return returnContext;
     }
   }
-  return {};
+  return returnContext;
 };
