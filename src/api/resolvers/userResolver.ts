@@ -37,10 +37,8 @@ export default {
       const token = context.userdata?.token;
       const user = context.userdata?.user;
       if (!user) {
-        throw new CustomError('No user login', 401);
-      }
-
-      if (!token) {
+        throw new CustomError('No user in token', 401);
+      } else if (!token) {
         throw new CustomError('No token', 400);
       } else if (jwt.verify(token, process.env.JWT_SECRET as string)) {
         const message: UserResponse = {
