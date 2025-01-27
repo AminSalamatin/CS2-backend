@@ -7,7 +7,7 @@ const port = process.env.PORT || 3000;
     await mongoConnect();
     app.listen(port, () => {
       /* eslint-disable no-console */
-      console.log(`Listening: http://localhost:${port}`);
+      console.log(`Listening: ${port}`);
       /* eslint-enable no-console */
     });
   } catch (error) {
