@@ -15,12 +15,14 @@ git clone https://github.com/AminSalamatin/CS2-backend.git
 ## NPM Commands
 
 - `npm i` to install dependencies
-- `npm run dev` to start development server
+- `npm run build` to compile for production
+- `npm run start` to start server
+- `npm run dev` to start server in nodemon development environment
 
 ## Environmental Variable
 
-- `NODE_ENV` = Node Environment
-- `PORT` = Localhost Port
+- `NODE_ENV` = Node Environment (production by default)
+- `PORT` = Port (3000 by default)
 - `JWT_SECRET` = JSON Web Token Secret
 - `DATABASE_URL` = MongoDB Database URL
 
