@@ -1,11 +1,11 @@
 import app from './app';
 import mongoConnect from './utils/db';
 
-const port = process.env.PORT || 3000;
+const port = Number(process.env.PORT) || 3000;
 (async () => {
   try {
     await mongoConnect();
-    app.listen(port, () => {
+    app.listen(port, '0.0.0.0', () => {
       /* eslint-disable no-console */
       console.log(`Listening: ${port}`);
       /* eslint-enable no-console */
