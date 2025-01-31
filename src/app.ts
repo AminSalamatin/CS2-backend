@@ -53,24 +53,24 @@ app.use(
           getPlayerByName: rateLimitRule({max: 10, window: '1m'}),
 
           // Forum
-          getPosts: rateLimitRule({max: 5, window: '1m'}),
-          postById: rateLimitRule({max: 10, window: '1m'}),
+          getPosts: rateLimitRule({max: 50, window: '1m'}),
+          postById: rateLimitRule({max: 50, window: '1m'}),
 
           // User
-          users: rateLimitRule({max: 5, window: '1m'}),
+          users: rateLimitRule({max: 10, window: '1m'}),
           userById: rateLimitRule({max: 10, window: '1m'}),
           checkToken: rateLimitRule({max: 2, window: '1s'}),
         },
         Mutation: {
           // Forum
           createPost: rateLimitRule({max: 2, window: '1m'}),
-          createComment: rateLimitRule({max: 3, window: '1m'}),
-          deletePost: rateLimitRule({max: 2, window: '1m'}),
-          deleteComment: rateLimitRule({max: 3, window: '1m'}),
+          createComment: rateLimitRule({max: 5, window: '1m'}),
+          deletePost: rateLimitRule({max: 5, window: '1m'}),
+          deleteComment: rateLimitRule({max: 5, window: '1m'}),
 
           // User
-          login: rateLimitRule({max: 5, window: '1m'}),
-          register: rateLimitRule({max: 1, window: '1m'}),
+          login: rateLimitRule({max: 10, window: '1m'}),
+          register: rateLimitRule({max: 3, window: '1m'}),
           updateUser: rateLimitRule({max: 5, window: '1m'}),
           deleteUser: rateLimitRule({max: 5, window: '1m'}),
         },
