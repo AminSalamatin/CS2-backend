@@ -40,14 +40,14 @@ app.use(
       {
         Query: {
           // HLTV
-          getStreams: rateLimitRule({max: 5, window: '1m'}),
-          getTeamRanking: rateLimitRule({max: 3, window: '1m'}),
+          getStreams: rateLimitRule({max: 10, window: '1m'}),
+          getTeamRanking: rateLimitRule({max: 10, window: '1m'}),
           getTeam: rateLimitRule({max: 10, window: '1m'}),
-          getPlayerRanking: rateLimitRule({max: 3, window: '1m'}),
+          getPlayerRanking: rateLimitRule({max: 10, window: '1m'}),
           getPlayer: rateLimitRule({max: 10, window: '1m'}),
-          getEvents: rateLimitRule({max: 5, window: '1m'}),
+          getEvents: rateLimitRule({max: 10, window: '1m'}),
           getEvent: rateLimitRule({max: 10, window: '1m'}),
-          getNews: rateLimitRule({max: 5, window: '1m'}),
+          getNews: rateLimitRule({max: 10, window: '1m'}),
           getEventByName: rateLimitRule({max: 10, window: '1m'}),
           getTeamByName: rateLimitRule({max: 10, window: '1m'}),
           getPlayerByName: rateLimitRule({max: 10, window: '1m'}),
